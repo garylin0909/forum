@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的 GitHub 論壇網頁</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f6f8fa;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: #24292f;
+            color: white;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .forum-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>歡迎來到我的社群論壇</h1>
+    <p>這是一個基於 GitHub Discussions 的討論空間</p>
+</header>
+
+<div class="forum-container">
+    <h2>所有討論</h2>
+    <hr>
+    
+    <div class="giscus"></div>
+
+    <script src="https://giscus.app/client.js"
+        data-repo="[你的帳號/你的倉庫名]"
+        data-repo-id="[你的ID]"
+        data-category="General"
+        data-category-id="[你的分類ID]"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="light"
+        data-lang="zh-TW"
+        crossorigin="anonymous"
+        async>
+    </script>
+</div>
+
+</body>
+</html>
