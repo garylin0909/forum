@@ -4,12 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>選課詢問論壇</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         body {
             font-family: "Microsoft JhengHei", Arial, sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* 確保頁尾永遠在底部 */
         }
 
         header {
@@ -58,12 +63,12 @@
             background-color: #2c3e50;
         }
 
-        /* 下拉選單容器 (預設隱藏) */
+        /* 下拉選單容器 */
         .dropdown-content {
             display: none;
             position: absolute;
             background-color: #ffffff;
-            min-width: 160px;
+            min-width: 180px; /* 稍微加寬一點以免文字折行 */
             box-shadow: 0 8px 16px rgba(0,0,0,0.2);
             z-index: 1;
             border-radius: 0 0 4px 4px;
@@ -90,26 +95,86 @@
             color: #007bff;
         }
 
-        /* 目前所在的分類提示 */
-        .current-category {
-            text-align: center;
-            margin: 20px auto;
+        /* 內容區塊容器 (為了讓 Footer 置底) */
+        .main-container {
+            flex: 1;
+            width: 100%;
             max-width: 800px;
-            padding: 10px;
-            background: #e8f4fc;
-            border-left: 5px solid #007bff;
-            border-radius: 4px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
+
+        /* 控制面板與標題 */
+        .control-panel {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #e8f4fc;
+            border-radius: 8px;
+            border-left: 5px solid #007bff;
+        }
+
+        /* 討論串切換器樣式 */
+        .topic-switcher {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .topic-input {
+            padding: 8px 15px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 220px;
+            outline: none;
+        }
+
+        .btn-go {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-go:hover { background-color: #0056b3; }
+
+        .btn-reset {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .btn-reset:hover { background-color: #5a6268; }
 
         /* 論壇本體容器 */
         .forum-wrapper {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
             background: white;
+            padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
+
+        /* 頁尾樣式 */
+        footer {
+            background-color: #2c3e50;
+            color: #bdc3c7;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: auto;
+        }
+
+        footer a { color: #fff; text-decoration: none; }
+        footer a:hover { color: #3498db; }
+        
+        .footer-socials { margin-top: 15px; }
+        .footer-socials a { margin: 0 10px; font-size: 1.2em; }
     </style>
 </head>
 <body>
@@ -169,13 +234,39 @@
     </ul>
 </nav>
 
-<div id="status-bar" class="current-category">
-    正在瀏覽：<span id="category-name" style="font-weight: bold;">載入中...</span>
+<div class="main-container">
+    <div class="control-panel">
+        <div id="status-bar">
+            正在瀏覽：<span id="category-name" style="font-weight: bold; font-size: 1.2em;">載入中...</span>
+        </div>
+
+        <div class="topic-switcher">
+            <input type="text" id="topic-input" class="topic-input" placeholder="輸入課名建立/搜尋討論串...">
+            <button onclick="changeTopic()" class="btn-go">前往</button>
+            <button onclick="resetTopic()" class="btn-reset">重置</button>
+        </div>
+        <p style="font-size: 0.8em; color: #666; margin-top: 8px; margin-bottom: 0;">
+            輸入課程名稱可切換至該課程專屬討論區，留空則為系所一般閒聊。
+        </p>
+    </div>
+
+    <div class="forum-wrapper">
+        <div class="giscus"></div>
+    </div>
 </div>
 
-<div class="forum-wrapper">
-    <div class="giscus"></div>
-</div>
+<footer>
+    <div>
+        <strong>校園選課詢問論壇</strong> &copy; 2025
+    </div>
+    <div style="margin-top: 10px; font-size: 0.9em;">
+        聯絡管理員：<a href="mailto:your-email@example.com">your-email@example.com</a>
+    </div>
+    <div class="footer-socials">
+        <a href="https://github.com/garylin0909" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="#" target="_blank"><i class="fas fa-envelope"></i></a>
+    </div>
+</footer>
 
 <script>
     // 1. 定義分類 Map
@@ -204,24 +295,60 @@
     // 2. 取得網址參數
     const urlParams = new URLSearchParams(window.location.search);
     let cat = urlParams.get('cat');
+    let topic = urlParams.get('topic'); // 新增 topic 參數
 
-    // 3. 設定預設值 (如果沒有參數，或參數不存在於 map 中，就預設為 "公告")
+    // 3. 設定預設值
     if (!cat || !categoryMap[cat]) {
         cat = '公告';
     }
 
     const targetId = categoryMap[cat];
+    
+    // 4. 設定顯示名稱與 Term (用於區分討論串)
+    let displayName = cat + " 討論區";
+    let term = cat + " - 一般討論區"; // 預設 term
 
-    // 4. 更新頁面上的狀態文字
-    document.getElementById('category-name').textContent = cat + " 討論區";
+    if (topic && topic.trim() !== "") {
+        displayName = cat + " - " + topic;
+        term = cat + " - " + topic;
+        // 將目前的 topic 填回輸入框，方便使用者知道現在在哪
+        document.getElementById('topic-input').value = topic;
+    }
 
-    // 5. 動態載入 Giscus
+    document.getElementById('category-name').textContent = displayName;
+
+    // 5. 切換討論串的函式
+    function changeTopic() {
+        const inputVal = document.getElementById('topic-input').value.trim();
+        if (inputVal) {
+            window.location.href = `?cat=${cat}&topic=${encodeURIComponent(inputVal)}`;
+        } else {
+            alert("請輸入課程名稱");
+        }
+    }
+
+    function resetTopic() {
+        window.location.href = `?cat=${cat}`;
+    }
+
+    // 綁定 Enter 鍵
+    document.getElementById('topic-input').addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            changeTopic();
+        }
+    });
+
+    // 6. 動態載入 Giscus (修改 mapping 為 term)
     const script = document.createElement('script');
     script.src = "https://giscus.app/client.js";
     script.setAttribute('data-repo', "garylin0909/forum");
     script.setAttribute('data-repo-id', "R_kgDOQzwF0Q");
     script.setAttribute('data-category-id', targetId);
-    script.setAttribute('data-mapping', "pathname");
+    
+    // 這裡從 pathname 改為 term，這是實現單一頁面多討論串的關鍵
+    script.setAttribute('data-mapping', "term");
+    script.setAttribute('data-term', term); 
+    
     script.setAttribute('data-strict', "0");
     script.setAttribute('data-reactions-enabled', "1");
     script.setAttribute('data-emit-metadata', "0");
