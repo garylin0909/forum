@@ -3,61 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 GitHub 論壇網頁</title>
+    <title>我的自製論壇</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f6f8fa;
-        }
-        header {
-            text-align: center;
-            padding: 40px 0;
-            background: #24292f;
-            color: white;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        .forum-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+        /* 簡單的排版設計 */
+        body { font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
+        header { background: #007bff; color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px; }
+        .forum-wrapper { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>歡迎來到我的社群論壇</h1>
-    <p>這是一個基於 GitHub Discussions 的討論空間</p>
+    <h1>🚀 歡迎來到我的論壇</h1>
+    <p>請在下方留言參與討論！</p>
 </header>
 
-<div class="forum-container">
-    <h2>所有討論</h2>
-    <hr>
-    
+<div class="forum-wrapper">
     <div class="giscus"></div>
+</div>
 
-    <script src="https://giscus.app/client.js"
-        data-repo="[你的帳號/你的倉庫名]"
-        data-repo-id="[你的ID]"
+<script src="https://giscus.app/client.js"
+        data-repo="garylin0909/forum"
+        data-repo-id="R_kgDOQzwF0Q"
         data-category="General"
-        data-category-id="[你的分類ID]"
+        data-category-id="DIC_kwDOQzwF0c4C0lJB"
         data-mapping="pathname"
         data-strict="0"
         data-reactions-enabled="1"
         data-emit-metadata="0"
         data-input-position="top"
-        data-theme="light"
+        data-theme="preferred_color_scheme"
         data-lang="zh-TW"
         crossorigin="anonymous"
         async>
-    </script>
-</div>
+</script>
 
 </body>
 </html>
