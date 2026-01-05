@@ -1,42 +1,67 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的自製論壇</title>
-    <style>
-        /* 簡單的排版設計 */
-        body { font-family: sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f9f9f9; }
-        header { background: #007bff; color: white; padding: 20px; text-align: center; border-radius: 10px; margin-bottom: 20px; }
-        .forum-wrapper { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    </style>
-</head>
 <body>
 
 <header>
-    <h1>🚀 歡迎來到我的論壇</h1>
-    <p>請在下方留言參與討論！</p>
+    <h1>🚀 歡迎來到我的多功能論壇</h1>
 </header>
+
+<nav style="text-align: center; margin: 20px; padding: 10px; background: #eee; border-radius: 8px;">
+    <strong>快速切換：</strong>
+    <a href="?cat=news" style="margin: 5px;">📢 管理員公告</a> | 
+    <a href="?cat=general" style="margin: 5px;">🏠 一般討論區</a> | 
+    <a href="?cat=other" style="margin: 5px;">❓ 其他</a>
+    </nav>
 
 <div class="forum-wrapper">
     <div class="giscus"></div>
 </div>
 
-<script src="https://giscus.app/client.js"
-        data-repo="garylin0909/forum"
-        data-repo-id="R_kgDOQzwF0Q"
-        data-category="General"
-        data-category-id="DIC_kwDOQzwF0c4C0lJB"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="zh-TW"
-        crossorigin="anonymous"
-        async>
+<script>
+    // 取得網址上的參數來決定載入哪個分類 ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const cat = urlParams.get('cat');
+
+    // 這裡定義你的分類名稱與對應的 DIC_ID (請從 giscus.app 取得)
+    const categoryMap = {
+        '公告': 'DIC_kwDOQzwF0c4C0lJA',
+        '兒英': 'DIC_kwDOQzwF0c4C0lNi',
+        '其他': 'DIC_kwDOQzwF0c4C0lN5',
+        '幼教': 'DIC_kwDOQzwF0c4C0lNd',
+        '心諮': 'DIC_kwDOQzwF0c4C0lNf',
+        '教經': 'DIC_kwDOQzwF0c4C0lNb',
+        '教育': 'DIC_kwDOQzwF0c4C0lNc',
+        '數位': 'DIC_kwDOQzwF0c4C0lNw',
+        '數資': 'DIC_kwDOQzwF0c4C0lNm',
+        '文創': 'DIC_kwDOQzwF0c4C0lNl',
+        '特教': 'DIC_kwDOQzwF0c4C0lNe',
+        '社發': 'DIC_kwDOQzwF0c4C0lNg',
+        '自然': 'DIC_kwDOQzwF0c4C0lNn',
+        '藝設': 'DIC_kwDOQzwF0c4C0lNj',
+        '語創': 'DIC_kwDOQzwF0c4C0lNh',
+        '資科': 'DIC_kwDOQzwF0c4C0lNv',
+        '通識': 'DIC_kwDOQzwF0c4C0lNx',
+        '音樂': 'DIC_kwDOQzwF0c4C0lNk',
+        '體育': 'DIC_kwDOQzwF0c4C0lNo'
+    };
+
+    // 如果網址沒有參數，預設顯示一般討論區
+    const targetId = categoryMap[cat] || categoryMap['general'];
+
+    // 動態載入 Giscus
+    const script = document.createElement('script');
+    script.src = "https://giscus.app/client.js";
+    script.setAttribute('data-repo', "garylin0909/forum");
+    script.setAttribute('data-repo-id', "R_kgDOQzwF0Q");
+    script.setAttribute('data-category-id', targetId); // 使用動態 ID
+    script.setAttribute('data-mapping', "pathname");
+    script.setAttribute('data-strict', "0");
+    script.setAttribute('data-reactions-enabled', "1");
+    script.setAttribute('data-emit-metadata', "0");
+    script.setAttribute('data-input-position', "top");
+    script.setAttribute('data-theme', "preferred_color_scheme");
+    script.setAttribute('data-lang', "zh-TW");
+    script.setAttribute('crossorigin', "anonymous");
+    script.async = true;
+    document.body.appendChild(script);
 </script>
 
 </body>
-</html>
